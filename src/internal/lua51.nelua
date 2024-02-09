@@ -1,0 +1,178 @@
+global lua_State: type <cimport,nodecl,forwarddecl> = @record{}
+global lua_CFunction: type <cimport,nodecl> = @function(L: *lua_State): cint
+global lua_Reader: type <cimport,nodecl> = @function(L: *lua_State, ud: pointer, sz: *csize): cstring
+global lua_Writer: type <cimport,nodecl> = @function(L: *lua_State, p: pointer, sz: csize, ud: pointer): cint
+global lua_Alloc: type <cimport,nodecl> = @function(ud: pointer, ptr: pointer, osize: csize, nsize: csize): pointer
+global lua_Number: type <cimport,nodecl> = @float64
+global lua_Integer: type <cimport,nodecl> = @cptrdiff
+global lua_Debug: type <cimport,nodecl,forwarddecl> = @record{}
+global lua_Hook: type <cimport,nodecl> = @function(L: *lua_State, ar: *lua_Debug): void
+lua_Debug = @record{
+  event: cint,
+  name: cstring,
+  namewhat: cstring,
+  what: cstring,
+  source: cstring,
+  currentline: cint,
+  nups: cint,
+  linedefined: cint,
+  lastlinedefined: cint,
+  short_src: [60]cchar,
+  i_ci: cint
+}
+global luaL_Reg: type <cimport,nodecl> = @record{
+  name: cstring,
+  func: lua_CFunction
+}
+global luaL_Buffer: type <cimport,nodecl> = @record{
+  p: cstring,
+  lvl: cint,
+  L: *lua_State,
+  buffer: [8192]cchar
+}
+global function lua_newstate(f: lua_Alloc, ud: pointer): *lua_State <cimport,nodecl> end
+global function lua_close(L: *lua_State): void <cimport,nodecl> end
+global function lua_newthread(L: *lua_State): *lua_State <cimport,nodecl> end
+global function lua_atpanic(L: *lua_State, panicf: lua_CFunction): lua_CFunction <cimport,nodecl> end
+global function lua_gettop(L: *lua_State): cint <cimport,nodecl> end
+global function lua_settop(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_pushvalue(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_remove(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_insert(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_replace(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_checkstack(L: *lua_State, sz: cint): cint <cimport,nodecl> end
+global function lua_xmove(from: *lua_State, to: *lua_State, n: cint): void <cimport,nodecl> end
+global function lua_isnumber(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_isstring(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_iscfunction(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_isuserdata(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_type(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_typename(L: *lua_State, tp: cint): cstring <cimport,nodecl> end
+global function lua_equal(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,nodecl> end
+global function lua_rawequal(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,nodecl> end
+global function lua_lessthan(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,nodecl> end
+global function lua_tonumber(L: *lua_State, idx: cint): lua_Number <cimport,nodecl> end
+global function lua_tointeger(L: *lua_State, idx: cint): lua_Integer <cimport,nodecl> end
+global function lua_toboolean(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_tolstring(L: *lua_State, idx: cint, len: *csize): cstring <cimport,nodecl> end
+global function lua_objlen(L: *lua_State, idx: cint): csize <cimport,nodecl> end
+global function lua_tocfunction(L: *lua_State, idx: cint): lua_CFunction <cimport,nodecl> end
+global function lua_touserdata(L: *lua_State, idx: cint): pointer <cimport,nodecl> end
+global function lua_tothread(L: *lua_State, idx: cint): *lua_State <cimport,nodecl> end
+global function lua_topointer(L: *lua_State, idx: cint): pointer <cimport,nodecl> end
+global function lua_pushnil(L: *lua_State): void <cimport,nodecl> end
+global function lua_pushnumber(L: *lua_State, n: lua_Number): void <cimport,nodecl> end
+global function lua_pushinteger(L: *lua_State, n: lua_Integer): void <cimport,nodecl> end
+global function lua_pushlstring(L: *lua_State, s: cstring, l: csize): void <cimport,nodecl> end
+global function lua_pushstring(L: *lua_State, s: cstring): void <cimport,nodecl> end
+global function lua_pushvfstring(L: *lua_State, fmt: cstring, argp: cvalist): cstring <cimport,nodecl> end
+global function lua_pushfstring(L: *lua_State, fmt: cstring, ...: cvarargs): cstring <cimport,nodecl> end
+global function lua_pushcclosure(L: *lua_State, fn: lua_CFunction, n: cint): void <cimport,nodecl> end
+global function lua_pushboolean(L: *lua_State, b: cint): void <cimport,nodecl> end
+global function lua_pushlightuserdata(L: *lua_State, p: pointer): void <cimport,nodecl> end
+global function lua_pushthread(L: *lua_State): cint <cimport,nodecl> end
+global function lua_gettable(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_getfield(L: *lua_State, idx: cint, k: cstring): void <cimport,nodecl> end
+global function lua_rawget(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_rawgeti(L: *lua_State, idx: cint, n: cint): void <cimport,nodecl> end
+global function lua_createtable(L: *lua_State, narr: cint, nrec: cint): void <cimport,nodecl> end
+global function lua_newuserdata(L: *lua_State, sz: csize): pointer <cimport,nodecl> end
+global function lua_getmetatable(L: *lua_State, objindex: cint): cint <cimport,nodecl> end
+global function lua_getfenv(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_settable(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_setfield(L: *lua_State, idx: cint, k: cstring): void <cimport,nodecl> end
+global function lua_rawset(L: *lua_State, idx: cint): void <cimport,nodecl> end
+global function lua_rawseti(L: *lua_State, idx: cint, n: cint): void <cimport,nodecl> end
+global function lua_setmetatable(L: *lua_State, objindex: cint): cint <cimport,nodecl> end
+global function lua_setfenv(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_call(L: *lua_State, nargs: cint, nresults: cint): void <cimport,nodecl> end
+global function lua_pcall(L: *lua_State, nargs: cint, nresults: cint, errfunc: cint): cint <cimport,nodecl> end
+global function lua_cpcall(L: *lua_State, func: lua_CFunction, ud: pointer): cint <cimport,nodecl> end
+global function lua_load(L: *lua_State, reader: lua_Reader, dt: pointer, chunkname: cstring): cint <cimport,nodecl> end
+global function lua_dump(L: *lua_State, writer: lua_Writer, data: pointer): cint <cimport,nodecl> end
+global function lua_yield(L: *lua_State, nresults: cint): cint <cimport,nodecl> end
+global function lua_resume(L: *lua_State, narg: cint): cint <cimport,nodecl> end
+global function lua_status(L: *lua_State): cint <cimport,nodecl> end
+global function lua_gc(L: *lua_State, what: cint, data: cint): cint <cimport,nodecl> end
+global function lua_error(L: *lua_State): cint <cimport,nodecl> end
+global function lua_next(L: *lua_State, idx: cint): cint <cimport,nodecl> end
+global function lua_concat(L: *lua_State, n: cint): void <cimport,nodecl> end
+global function lua_getallocf(L: *lua_State, ud: *pointer): lua_Alloc <cimport,nodecl> end
+global function lua_setallocf(L: *lua_State, f: lua_Alloc, ud: pointer): void <cimport,nodecl> end
+global function lua_setlevel(from: *lua_State, to: *lua_State): void <cimport,nodecl> end
+global function lua_getstack(L: *lua_State, level: cint, ar: *lua_Debug): cint <cimport,nodecl> end
+global function lua_getinfo(L: *lua_State, what: cstring, ar: *lua_Debug): cint <cimport,nodecl> end
+global function lua_getlocal(L: *lua_State, ar: *lua_Debug, n: cint): cstring <cimport,nodecl> end
+global function lua_setlocal(L: *lua_State, ar: *lua_Debug, n: cint): cstring <cimport,nodecl> end
+global function lua_getupvalue(L: *lua_State, funcindex: cint, n: cint): cstring <cimport,nodecl> end
+global function lua_setupvalue(L: *lua_State, funcindex: cint, n: cint): cstring <cimport,nodecl> end
+global function lua_sethook(L: *lua_State, func: lua_Hook, mask: cint, count: cint): cint <cimport,nodecl> end
+global function lua_gethook(L: *lua_State): lua_Hook <cimport,nodecl> end
+global function lua_gethookmask(L: *lua_State): cint <cimport,nodecl> end
+global function lua_gethookcount(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_base(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_table(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_io(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_os(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_string(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_math(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_debug(L: *lua_State): cint <cimport,nodecl> end
+global function luaopen_package(L: *lua_State): cint <cimport,nodecl> end
+global function luaL_openlibs(L: *lua_State): void <cimport,nodecl> end
+global function luaL_openlib(L: *lua_State, libname: cstring, l: *luaL_Reg, nup: cint): void <cimport,nodecl> end
+global function luaL_register(L: *lua_State, libname: cstring, l: *luaL_Reg): void <cimport,nodecl> end
+global function luaL_getmetafield(L: *lua_State, obj: cint, e: cstring): cint <cimport,nodecl> end
+global function luaL_callmeta(L: *lua_State, obj: cint, e: cstring): cint <cimport,nodecl> end
+global function luaL_typerror(L: *lua_State, narg: cint, tname: cstring): cint <cimport,nodecl> end
+global function luaL_argerror(L: *lua_State, numarg: cint, extramsg: cstring): cint <cimport,nodecl> end
+global function luaL_checklstring(L: *lua_State, numArg: cint, l: *csize): cstring <cimport,nodecl> end
+global function luaL_optlstring(L: *lua_State, numArg: cint, def: cstring, l: *csize): cstring <cimport,nodecl> end
+global function luaL_checknumber(L: *lua_State, numArg: cint): lua_Number <cimport,nodecl> end
+global function luaL_optnumber(L: *lua_State, nArg: cint, def: lua_Number): lua_Number <cimport,nodecl> end
+global function luaL_checkinteger(L: *lua_State, numArg: cint): lua_Integer <cimport,nodecl> end
+global function luaL_optinteger(L: *lua_State, nArg: cint, def: lua_Integer): lua_Integer <cimport,nodecl> end
+global function luaL_checkstack(L: *lua_State, sz: cint, msg: cstring): void <cimport,nodecl> end
+global function luaL_checktype(L: *lua_State, narg: cint, t: cint): void <cimport,nodecl> end
+global function luaL_checkany(L: *lua_State, narg: cint): void <cimport,nodecl> end
+global function luaL_newmetatable(L: *lua_State, tname: cstring): cint <cimport,nodecl> end
+global function luaL_checkudata(L: *lua_State, ud: cint, tname: cstring): pointer <cimport,nodecl> end
+global function luaL_where(L: *lua_State, lvl: cint): void <cimport,nodecl> end
+global function luaL_error(L: *lua_State, fmt: cstring, ...: cvarargs): cint <cimport,nodecl> end
+global function luaL_checkoption(L: *lua_State, narg: cint, def: cstring, lst: *[0]cstring): cint <cimport,nodecl> end
+global function luaL_ref(L: *lua_State, t: cint): cint <cimport,nodecl> end
+global function luaL_unref(L: *lua_State, t: cint, ref: cint): void <cimport,nodecl> end
+global function luaL_loadfile(L: *lua_State, filename: cstring): cint <cimport,nodecl> end
+global function luaL_loadbuffer(L: *lua_State, buff: cstring, sz: csize, name: cstring): cint <cimport,nodecl> end
+global function luaL_loadstring(L: *lua_State, s: cstring): cint <cimport,nodecl> end
+global function luaL_newstate(): *lua_State <cimport,nodecl> end
+global function luaL_gsub(L: *lua_State, s: cstring, p: cstring, r: cstring): cstring <cimport,nodecl> end
+global function luaL_findtable(L: *lua_State, idx: cint, fname: cstring, szhint: cint): cstring <cimport,nodecl> end
+global function luaL_buffinit(L: *lua_State, B: *luaL_Buffer): void <cimport,nodecl> end
+global function luaL_prepbuffer(B: *luaL_Buffer): cstring <cimport,nodecl> end
+global function luaL_addlstring(B: *luaL_Buffer, s: cstring, l: csize): void <cimport,nodecl> end
+global function luaL_addstring(B: *luaL_Buffer, s: cstring): void <cimport,nodecl> end
+global function luaL_addvalue(B: *luaL_Buffer): void <cimport,nodecl> end
+global function luaL_pushresult(B: *luaL_Buffer): void <cimport,nodecl> end
+global lua_Chunkreader: type = lua_Reader
+global lua_Chunkwriter: type = lua_Writer
+global luaL_reg: type = luaL_Reg
+global LUA_ENVIRONINDEX: integer <cimport,nodecl>
+global LUA_ERRERR: integer <cimport,nodecl>
+global LUA_ERRFILE: integer <cimport,nodecl>
+global LUA_ERRMEM: integer <cimport,nodecl>
+global LUA_ERRRUN: integer <cimport,nodecl>
+global LUA_ERRSYNTAX: integer <cimport,nodecl>
+global LUA_GLOBALSINDEX: integer <cimport,nodecl>
+global LUA_HOOKCOUNT: integer <cimport,nodecl>
+global LUA_HOOKLINE: integer <cimport,nodecl>
+global LUA_HOOKRET: integer <cimport,nodecl>
+global LUA_MASKCALL: integer <cimport,nodecl>
+global LUA_MASKCOUNT: integer <cimport,nodecl>
+global LUA_MASKLINE: integer <cimport,nodecl>
+global LUA_MASKRET: integer <cimport,nodecl>
+global LUA_MINSTACK: integer <cimport,nodecl>
+global LUA_MULTRET: integer <cimport,nodecl>
+global LUA_NOREF: integer <cimport,nodecl>
+global LUA_REFNIL: integer <cimport,nodecl>
+global LUA_REGISTRYINDEX: integer <cimport,nodecl>
+global LUA_YIELD: integer <cimport,nodecl>
