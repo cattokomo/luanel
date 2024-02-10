@@ -1,0 +1,91 @@
+##[[
+local lua_num
+if LUANEL_USE_51 then
+  lua_num = 51
+elseif LUANEL_USE_52 then
+  lua_num = 52
+elseif LUANEL_USE_53 then
+  lua_num = 53
+elseif LUANEL_USE_54 then
+  lua_num = 54
+else
+  static_error("Please define either LUANEL_USE_51, LUANEL_USE_52, LUANEL_USE_53, or LUANEL_USE_54")
+end
+
+cinclude "<lua.h>"
+cinclude "<lualib.h>"
+cinclude "<lauxlib.h>"
+]]
+require(#["internal.lua"..lua_num]#)
+require("allocators.default")
+
+local Errors = @enum{
+  low_memory = 1
+}
+
+local LoadMode = @enum{
+  binary = 1,
+  text,
+  either
+}
+
+local ThreadStatus = @enum(cint){
+  ok = LUA_OK,
+  yield = LUA_YIELD,
+  err_runtime = LUA_ERRRUN,
+  err_memory = LUA_ERRMEM,
+  err_handler = LUA_ERRERR,
+  err_syntax = LUA_ERRSYNTAX,
+  err_file = LUA_ERRFILE,
+}
+
+local State = @record{
+  L: *lua_State
+}
+
+function State.init(): (*State, Errors)
+  local L = luaL_newstate()
+  if L == nilptr then
+    return nilptr, Errors.low_memory
+  end
+  local state = new(@State)
+  state.L = L
+  return state
+end
+
+function State:loadstring(str: string,
+                          chunkname: facultative(string),
+                          mode: facultative(LoadMode)): ThreadStatus
+  ## if lua_num >= 52 then
+  return luaL_loadbufferx(self.L, str, #str, chunkname or nilptr, (do
+    local result: string
+    switch mode do
+    case LoadMode.binary then result = "b"
+    case LoadMode.text then result = "t"
+    case LoadMode.either, 0 then result = nilptr
+    end
+    in result
+  end))
+  ## else
+  return luaL_loadbuffer(self.L, str, #str, chunkname or nilptr)
+  ## end
+end
+
+function State:call(nargs: integer, nresults: facultative(integer)): void
+  nresults = nresults or LUA_MULTRET
+  ## if lua_num >= 52 then
+  return lua_callk(self.L, nargs, nresults, 0, nilptr)
+  ## else
+  return lua_call(self.L, nargs, nresults)
+  ## end
+end
+
+function State:close(): void
+  lua_close(self.L)
+end
+
+local state = State.init()
+luaopen_base(state.L)
+state:loadstring("print 'yes'")
+state:call(0)
+state:close()

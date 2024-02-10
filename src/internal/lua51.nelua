@@ -52,7 +52,7 @@ global function lua_equal(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,
 global function lua_rawequal(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,nodecl> end
 global function lua_lessthan(L: *lua_State, idx1: cint, idx2: cint): cint <cimport,nodecl> end
 global function lua_tonumber(L: *lua_State, idx: cint): lua_Number <cimport,nodecl> end
-global function lua_tointeger(L: *lua_State, idx: cint): lua_Integer <cimport,nodecl> end
+global function lua_tocint(L: *lua_State, idx: cint): lua_Integer <cimport,nodecl> end
 global function lua_toboolean(L: *lua_State, idx: cint): cint <cimport,nodecl> end
 global function lua_tolstring(L: *lua_State, idx: cint, len: *csize): cstring <cimport,nodecl> end
 global function lua_objlen(L: *lua_State, idx: cint): csize <cimport,nodecl> end
@@ -62,7 +62,7 @@ global function lua_tothread(L: *lua_State, idx: cint): *lua_State <cimport,node
 global function lua_topointer(L: *lua_State, idx: cint): pointer <cimport,nodecl> end
 global function lua_pushnil(L: *lua_State): void <cimport,nodecl> end
 global function lua_pushnumber(L: *lua_State, n: lua_Number): void <cimport,nodecl> end
-global function lua_pushinteger(L: *lua_State, n: lua_Integer): void <cimport,nodecl> end
+global function lua_pushcint(L: *lua_State, n: lua_Integer): void <cimport,nodecl> end
 global function lua_pushlstring(L: *lua_State, s: cstring, l: csize): void <cimport,nodecl> end
 global function lua_pushstring(L: *lua_State, s: cstring): void <cimport,nodecl> end
 global function lua_pushvfstring(L: *lua_State, fmt: cstring, argp: cvalist): cstring <cimport,nodecl> end
@@ -129,8 +129,8 @@ global function luaL_checklstring(L: *lua_State, numArg: cint, l: *csize): cstri
 global function luaL_optlstring(L: *lua_State, numArg: cint, def: cstring, l: *csize): cstring <cimport,nodecl> end
 global function luaL_checknumber(L: *lua_State, numArg: cint): lua_Number <cimport,nodecl> end
 global function luaL_optnumber(L: *lua_State, nArg: cint, def: lua_Number): lua_Number <cimport,nodecl> end
-global function luaL_checkinteger(L: *lua_State, numArg: cint): lua_Integer <cimport,nodecl> end
-global function luaL_optinteger(L: *lua_State, nArg: cint, def: lua_Integer): lua_Integer <cimport,nodecl> end
+global function luaL_checkcint(L: *lua_State, numArg: cint): lua_Integer <cimport,nodecl> end
+global function luaL_optcint(L: *lua_State, nArg: cint, def: lua_Integer): lua_Integer <cimport,nodecl> end
 global function luaL_checkstack(L: *lua_State, sz: cint, msg: cstring): void <cimport,nodecl> end
 global function luaL_checktype(L: *lua_State, narg: cint, t: cint): void <cimport,nodecl> end
 global function luaL_checkany(L: *lua_State, narg: cint): void <cimport,nodecl> end
@@ -156,23 +156,23 @@ global function luaL_pushresult(B: *luaL_Buffer): void <cimport,nodecl> end
 global lua_Chunkreader: type = lua_Reader
 global lua_Chunkwriter: type = lua_Writer
 global luaL_reg: type = luaL_Reg
-global LUA_ENVIRONINDEX: integer <cimport,nodecl>
-global LUA_ERRERR: integer <cimport,nodecl>
-global LUA_ERRFILE: integer <cimport,nodecl>
-global LUA_ERRMEM: integer <cimport,nodecl>
-global LUA_ERRRUN: integer <cimport,nodecl>
-global LUA_ERRSYNTAX: integer <cimport,nodecl>
-global LUA_GLOBALSINDEX: integer <cimport,nodecl>
-global LUA_HOOKCOUNT: integer <cimport,nodecl>
-global LUA_HOOKLINE: integer <cimport,nodecl>
-global LUA_HOOKRET: integer <cimport,nodecl>
-global LUA_MASKCALL: integer <cimport,nodecl>
-global LUA_MASKCOUNT: integer <cimport,nodecl>
-global LUA_MASKLINE: integer <cimport,nodecl>
-global LUA_MASKRET: integer <cimport,nodecl>
-global LUA_MINSTACK: integer <cimport,nodecl>
-global LUA_MULTRET: integer <cimport,nodecl>
-global LUA_NOREF: integer <cimport,nodecl>
-global LUA_REFNIL: integer <cimport,nodecl>
-global LUA_REGISTRYINDEX: integer <cimport,nodecl>
-global LUA_YIELD: integer <cimport,nodecl>
+global LUA_ENVIRONINDEX: cint <cimport,nodecl>
+global LUA_ERRERR: cint <cimport,nodecl>
+global LUA_ERRFILE: cint <cimport,nodecl>
+global LUA_ERRMEM: cint <cimport,nodecl>
+global LUA_ERRRUN: cint <cimport,nodecl>
+global LUA_ERRSYNTAX: cint <cimport,nodecl>
+global LUA_GLOBALSINDEX: cint <cimport,nodecl>
+global LUA_HOOKCOUNT: cint <cimport,nodecl>
+global LUA_HOOKLINE: cint <cimport,nodecl>
+global LUA_HOOKRET: cint <cimport,nodecl>
+global LUA_MASKCALL: cint <cimport,nodecl>
+global LUA_MASKCOUNT: cint <cimport,nodecl>
+global LUA_MASKLINE: cint <cimport,nodecl>
+global LUA_MASKRET: cint <cimport,nodecl>
+global LUA_MINSTACK: cint <cimport,nodecl>
+global LUA_MULTRET: cint <cimport,nodecl>
+global LUA_NOREF: cint <cimport,nodecl>
+global LUA_REFNIL: cint <cimport,nodecl>
+global LUA_REGISTRYINDEX: cint <cimport,nodecl>
+global LUA_YIELD: cint <cimport,nodecl>
